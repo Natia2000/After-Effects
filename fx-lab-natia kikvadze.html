@@ -1,0 +1,546 @@
+<html><head><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:720px;overflow:hidden;background:#07070d;font-family:'Noto Sans',Arial,sans-serif;color:#eef0ff}
+input{position:absolute;opacity:0;pointer-events:none}
+.app{position:relative;width:1280px;height:720px;display:grid;grid-template-columns:340px 1fr;gap:24px;padding:24px;background:radial-gradient(900px 500px at 80% 0,#2a1b6e55,transparent),radial-gradient(700px 500px at 0 100%,#0b4f6c55,transparent),#07070d}
+.side{display:flex;flex-direction:column;min-height:0;background:#ffffff0d;border:1px solid #ffffff22;border-radius:28px;padding:20px}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#8f7fee,#2dc75c 120%);display:grid;place-items:center;font-weight:700;color:#07070d}
+h1{font-size:20px;line-height:1.1}
+.sub{font-size:12px;color:#9aa0c8;margin:6px 0 14px}
+.list{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px}
+label{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;cursor:pointer;background:#ffffff08;border:1px solid transparent;transition:.25s;font-size:13px}
+label:hover{background:#ffffff18;transform:translateX(4px)}
+label b{font-size:11px;color:#7d84b8;width:20px}
+label span{flex:1;font-weight:600}
+label em{font-style:normal;font-size:10px;color:#9aa0c8;border:1px solid #ffffff22;border-radius:20px;padding:2px 8px}
+.main{display:flex;flex-direction:column;gap:14px;min-width:0}
+.top{display:flex;gap:10px;align-items:center;font-size:12px}
+.chip{padding:6px 12px;border-radius:20px;background:#ffffff10;border:1px solid #ffffff22;color:#cfd3f5}
+.chip i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2dc75c;margin-right:6px;animation:blink 1.4s infinite}
+.ar{position:relative;height:410px;perspective:1300px;border-radius:32px;overflow:hidden;background:radial-gradient(600px 300px at 50% 120%,#3a2a8a88,transparent),linear-gradient(#0d0e1c,#05050a);border:1px solid #ffffff22}
+.floor{position:absolute;left:-20%;right:-20%;bottom:-120px;height:300px;transform:rotateX(72deg);background-image:linear-gradient(#8f7fee66 1px,transparent 1px),linear-gradient(90deg,#8f7fee66 1px,transparent 1px);background-size:44px 44px;animation:grid 3s linear infinite;mask-image:linear-gradient(transparent,#000 40%)}
+.world{position:absolute;left:50px;top:24px;width:800px;height:400px;transform-style:preserve-3d;transform:scale(.88) rotateX(8deg) rotateY(-14deg);transform-origin:50% 40%;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.ar:hover .world{transform:scale(.88) rotateX(0) rotateY(0)}
+.art{position:absolute;inset:0;transform-style:preserve-3d;border-radius:22px}
+.ly{position:absolute;inset:0;pointer-events:none}
+.ly svg{width:100%;height:100%;display:block}
+.sky{transform:translateZ(0)}.sun{transform:translateZ(25px)}.mount{transform:translateZ(60px)}.fox{transform:translateZ(110px)}
+.ov{opacity:0;transform:translateZ(140px);transition:opacity .4s}
+.grain{background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='.8'/></svg>");mix-blend-mode:overlay;animation:gr .4s steps(3) infinite}
+.vig{background:radial-gradient(ellipse at center,transparent 35%,#000 105%)}
+.scan{background:repeating-linear-gradient(#0000 0 3px,#00000066 3px 5px);animation:sc 1s linear infinite}
+.shine{background:linear-gradient(105deg,transparent 40%,#ffffffaa 50%,transparent 60%);background-size:250% 100%;animation:sh 2.2s linear infinite}
+.parts i{position:absolute;bottom:-10px;width:8px;height:8px;border-radius:50%;background:#ffdc4a;box-shadow:0 0 12px #ffdc4a;animation:rise 4s linear infinite}
+.hud{position:absolute;inset:14px;pointer-events:none}
+.hud s{position:absolute;width:34px;height:34px;border:3px solid #fff;opacity:.8}
+.hud s:nth-child(1){left:0;top:0;border-right:0;border-bottom:0;border-radius:14px 0 0 0}
+.hud s:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-radius:0 14px 0 0}
+.hud s:nth-child(3){left:0;bottom:0;border-right:0;border-top:0;border-radius:0 0 0 14px}
+.hud s:nth-child(4){right:0;bottom:0;border-left:0;border-top:0;border-radius:0 0 14px 0}
+.hud p{position:absolute;font-size:11px;letter-spacing:.12em;color:#cfd3f5}
+.hud .l1{left:50px;top:8px}.hud .l2{right:50px;top:8px}.hud .l3{left:50px;bottom:8px}
+.layers{position:absolute;right:26px;bottom:26px;width:170px;padding:12px;border-radius:18px;background:#0b0b16cc;border:1px solid #ffffff22;font-size:11px;color:#cfd3f5;z-index:5}
+.layers div{display:flex;gap:8px;align-items:center;padding:3px 0}.layers i{width:10px;height:10px;border-radius:3px}
+.ret{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-35px;border:2px dashed #ffffff55;border-radius:50%;animation:spin 8s linear infinite;pointer-events:none}
+.info{display:none;position:absolute;left:0;right:0;top:0}
+.card{position:relative;height:150px;border-radius:28px;background:#ffffff0d;border:1px solid #ffffff22;padding:20px 24px}
+.info{grid-template-columns:1fr 1fr;gap:28px;padding:20px 24px}
+.card h2{font-size:22px}.tag{display:inline-block;margin:6px 0 8px;font-size:11px;color:#c6dcff;background:#659df233;border-radius:20px;padding:3px 10px}
+.card p{font-size:13px;line-height:1.5;color:#b9bee3}.card .res{color:#adf0c7}.card .res b{color:#2dc75c}
+@keyframes blink{50%{opacity:.2}}@keyframes grid{to{background-position:0 44px}}@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes gr{to{background-position:60px 40px}}@keyframes sc{to{background-position:0 5px}}@keyframes sh{from{background-position:150% 0}to{background-position:-50% 0}}
+@keyframes rise{from{transform:translateY(0);opacity:1}to{transform:translateY(-440px);opacity:0}}
+@keyframes bl{50%{filter:blur(14px)}}@keyframes gl{50%{filter:drop-shadow(0 0 70px #ffdc4a) drop-shadow(0 0 140px #fe9f4d) brightness(1.5)}}
+@keyframes hue{to{filter:hue-rotate(360deg)}}@keyframes wv{0%,100%{transform:translateZ(60px) skewX(-5deg)}50%{transform:translateZ(60px) skewX(5deg) translateY(8px)}}
+@keyframes gt{0%{transform:translateZ(110px) translateX(-8px);filter:drop-shadow(8px 0 #f0f) drop-shadow(-8px 0 #0ff)}50%{transform:translateZ(110px) translateX(10px) skewX(8deg);filter:drop-shadow(-10px 0 #f0f) drop-shadow(10px 0 #0ff)}100%{transform:translateZ(110px);filter:none}}
+@keyframes mi{0%,40%{transform:scaleX(1)}50%,90%{transform:scaleX(-1)}100%{transform:scaleX(1)}}
+@keyframes ec{50%{transform:translateZ(110px) translateX(60px)}}@keyframes st{50%{opacity:.15;filter:brightness(2.5)}}
+@keyframes ob{0%,100%{transform:scale(.88) rotateX(10deg) rotateY(-35deg)}50%{transform:scale(.88) rotateX(-6deg) rotateY(35deg)}}
+@keyframes bg{50%{transform:translateZ(110px) scale(1.35)}}
+#e1:checked~.app .info.i1,#e2:checked~.app .info.i2,#e3:checked~.app .info.i3,#e4:checked~.app .info.i4,#e5:checked~.app .info.i5,#e6:checked~.app .info.i6,#e7:checked~.app .info.i7,#e8:checked~.app .info.i8,#e9:checked~.app .info.i9,#e10:checked~.app .info.i10,#e11:checked~.app .info.i11,#e12:checked~.app .info.i12,#e13:checked~.app .info.i13,#e14:checked~.app .info.i14,#e15:checked~.app .info.i15,#e16:checked~.app .info.i16,#e17:checked~.app .info.i17,#e18:checked~.app .info.i18,#e19:checked~.app .info.i19{display:grid}
+#e1:checked~.app label[for=e1],#e2:checked~.app label[for=e2],#e3:checked~.app label[for=e3],#e4:checked~.app label[for=e4],#e5:checked~.app label[for=e5],#e6:checked~.app label[for=e6],#e7:checked~.app label[for=e7],#e8:checked~.app label[for=e8],#e9:checked~.app label[for=e9],#e10:checked~.app label[for=e10],#e11:checked~.app label[for=e11],#e12:checked~.app label[for=e12],#e13:checked~.app label[for=e13],#e14:checked~.app label[for=e14],#e15:checked~.app label[for=e15],#e16:checked~.app label[for=e16],#e17:checked~.app label[for=e17],#e18:checked~.app label[for=e18],#e19:checked~.app label[for=e19]{background:linear-gradient(135deg,#8f7fee,#659df2);border-color:#ffffff55;color:#fff}
+#e1:checked~.app .art{animation:bl 3s ease-in-out infinite}
+#e2:checked~.app .sun{animation:gl 2.5s ease-in-out infinite}
+#e3:checked~.app .fox{filter:drop-shadow(22px 28px 0 #000a)}#e3:checked~.app .mount{filter:drop-shadow(0 -14px 0 #0006)}
+#e4:checked~.app .art{animation:hue 6s linear infinite}
+#e5:checked~.app .art{filter:invert(1) hue-rotate(180deg)}
+#e6:checked~.app .art{filter:url(#post)}
+#e7:checked~.app .mount{filter:url(#disp);animation:wv 4s ease-in-out infinite}
+#e8:checked~.app .art{filter:url(#turb)}
+#e9:checked~.app .fox{animation:gt 1.1s steps(3) infinite}
+#e10:checked~.app .art{animation:mi 5s ease-in-out infinite}
+#e11:checked~.app .fox{filter:drop-shadow(-40px 0 0 #ffffff88) drop-shadow(-80px 0 0 #ffffff44) drop-shadow(-120px 0 0 #ffffff22);animation:ec 2.4s ease-in-out infinite}
+#e12:checked~.app .grain{opacity:.7}
+#e13:checked~.app .vig{opacity:1}
+#e14:checked~.app .art{filter:grayscale(1) contrast(1.25)}
+#e15:checked~.app .scan{opacity:1}
+#e16:checked~.app .parts{opacity:1}
+#e17:checked~.app .shine{opacity:1}
+#e18:checked~.app .art{animation:st .7s steps(1) infinite}
+#e19:checked~.app .world{animation:ob 6s ease-in-out infinite}
+#e20:checked~.app .fox{animation:bg 2s ease-in-out infinite}
+.sec{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#fff;font-weight:700;margin:14px 0 2px;padding:7px 10px;border-radius:10px;background:#8f7fee44}
+.subsec{font-size:10px;color:#7d84b8;margin:6px 0 0 10px;letter-spacing:.1em;text-transform:uppercase}
+@keyframes ex{0%,100%{filter:brightness(.55)}50%{filter:brightness(1.8)}}
+@keyframes cr{from{filter:saturate(2.5) hue-rotate(0)}to{filter:saturate(2.5) hue-rotate(360deg)}}
+#e21:checked~.app .art{filter:blur(6px)}
+#e22:checked~.app .art{filter:url(#mb)}
+#e23:checked~.app .art{filter:blur(3px)}#e23:checked~.app .fox{animation:bg 1.6s ease-in-out infinite}
+#e24:checked~.app .sky,#e24:checked~.app .sun,#e24:checked~.app .mount{filter:blur(7px)}
+#e25:checked~.app .art{filter:url(#sh)}
+#e26:checked~.app .art{filter:contrast(1.35) saturate(1.3) url(#sh)}
+#e27:checked~.app .art{filter:brightness(1.2) contrast(1.4)}
+#e28:checked~.app .art{animation:ex 3s ease-in-out infinite}
+#e29:checked~.app .art{filter:contrast(1.55) brightness(1.05)}
+#e30:checked~.app .art{filter:sepia(1) hue-rotate(170deg) saturate(2)}
+#e31:checked~.app .art{filter:grayscale(1) sepia(1) hue-rotate(250deg) saturate(3)}
+#e32:checked~.app .art{filter:saturate(2.4)}
+#e33:checked~.app .art{filter:sepia(.6) saturate(1.4) hue-rotate(-10deg)}
+#e34:checked~.app .art{animation:cr 4s linear infinite}
+#e21:checked~.app .i21,#e22:checked~.app .i22,#e23:checked~.app .i23,#e24:checked~.app .i24,#e25:checked~.app .i25,#e26:checked~.app .i26,#e27:checked~.app .i27,#e28:checked~.app .i28,#e29:checked~.app .i29,#e30:checked~.app .i30,#e31:checked~.app .i31,#e32:checked~.app .i32,#e33:checked~.app .i33,#e34:checked~.app .i34{display:grid}
+#e21:checked~.app label[for=e21],#e22:checked~.app label[for=e22],#e23:checked~.app label[for=e23],#e24:checked~.app label[for=e24],#e25:checked~.app label[for=e25],#e26:checked~.app label[for=e26],#e27:checked~.app label[for=e27],#e28:checked~.app label[for=e28],#e29:checked~.app label[for=e29],#e30:checked~.app label[for=e30],#e31:checked~.app label[for=e31],#e32:checked~.app label[for=e32],#e33:checked~.app label[for=e33],#e34:checked~.app label[for=e34]{background:linear-gradient(135deg,#8f7fee,#659df2);border-color:#ffffff55;color:#fff}
+@keyframes bul{50%{transform:translateZ(60px) scale(1.25,1.4)}}
+@keyframes twl{50%{transform:rotate(-14deg) scale(.88)}}
+@keyframes ofs{from{transform:translateZ(60px) translateX(0)}to{transform:translateZ(60px) translateX(-160px)}}
+@keyframes cpn{0%,100%{transform:perspective(900px) rotateY(24deg) skewY(-6deg)}50%{transform:perspective(900px) rotateY(-24deg) skewY(6deg)}}
+@keyframes pol{to{transform:rotate(360deg) scale(.6)}}
+@keyframes flr{from{transform:translateZ(140px) translateX(-300px)}to{transform:translateZ(140px) translateX(300px)}}
+@keyframes bm{to{transform:translateZ(140px) rotate(360deg)}}
+@keyframes bo{0%,100%{opacity:0}10%,30%{opacity:1}20%{opacity:.2}}
+@keyframes wav{from{transform:scale(.1);opacity:1}to{transform:scale(1.6);opacity:0}}
+@keyframes gsh{to{filter:hue-rotate(360deg)}}
+.flare{background:radial-gradient(circle at 50% 50%,#fff 0,#ffdc4a88 6%,transparent 14%),radial-gradient(circle at 70% 50%,#8f7fee88 0,transparent 5%),radial-gradient(circle at 30% 50%,#2dc75c66 0,transparent 4%);mix-blend-mode:screen}
+.beam{background:conic-gradient(from 0deg at 50% 50%,#fff0 0 85%,#ffffffcc 90%,#fff0 95%);mix-blend-mode:screen;transform-origin:50% 50%}
+.bolt svg{overflow:visible}
+.g4{background:conic-gradient(from 0deg at 50% 50%,#ff6464,#ffdc4a,#2dc75c,#659df2,#ff6464);mix-blend-mode:overlay;animation:gsh 5s linear infinite}
+.gramp{background:linear-gradient(135deg,#8f7fee,#2dc75c);mix-blend-mode:color;animation:gsh 6s linear infinite}
+.fillc{background:#659df2;mix-blend-mode:multiply}
+.gridc{background-image:linear-gradient(#fff9 2px,transparent 2px),linear-gradient(90deg,#fff9 2px,transparent 2px);background-size:40px 40px}
+.rw{display:grid;place-items:center}.rw i{position:absolute;width:420px;height:420px;border:3px solid #fff;border-radius:50%;animation:wav 3s linear infinite}
+.cell{background:radial-gradient(circle,#fff8 0 8px,transparent 9px);background-size:32px 32px;mix-blend-mode:overlay}
+.chk{background:conic-gradient(#fff8 25%,#0008 0 50%,#fff8 0 75%,#0008 0);background-size:60px 60px;mix-blend-mode:overlay}
+#e35:checked~.app .mount{animation:bul 2.6s ease-in-out infinite}
+#e36:checked~.app .art{animation:twl 3s ease-in-out infinite}
+#e37:checked~.app .art{filter:url(#rip)}
+#e38:checked~.app .art{clip-path:circle(47% at 50% 50%);transform:scale(1.05)}
+#e39:checked~.app .mount{animation:ofs 3s linear infinite alternate}
+#e40:checked~.app .art{animation:cpn 5s ease-in-out infinite}
+#e41:checked~.app .art{transform:scale(.55) translateY(-120px);-webkit-box-reflect:below 0 linear-gradient(transparent 0,#fff 100%)}
+#e42:checked~.app .art{animation:pol 8s linear infinite;border-radius:50%}
+#e43:checked~.app .flare{opacity:1;animation:flr 3s linear infinite alternate}
+#e44:checked~.app .beam{opacity:1;animation:bm 5s linear infinite}
+#e45:checked~.app .bolt{animation:bo 1.4s steps(1) infinite}
+#e46:checked~.app .g4{opacity:1}
+#e47:checked~.app .gramp{opacity:1}
+#e48:checked~.app .fillc{opacity:.85}
+#e49:checked~.app .gridc{opacity:1}
+#e50:checked~.app .rw{opacity:1}
+#e51:checked~.app .cell{opacity:1}
+#e52:checked~.app .chk{opacity:1}
+#e35:checked~.app .i35,#e36:checked~.app .i36,#e37:checked~.app .i37,#e38:checked~.app .i38,#e39:checked~.app .i39,#e40:checked~.app .i40,#e41:checked~.app .i41,#e42:checked~.app .i42,#e43:checked~.app .i43,#e44:checked~.app .i44,#e45:checked~.app .i45,#e46:checked~.app .i46,#e47:checked~.app .i47,#e48:checked~.app .i48,#e49:checked~.app .i49,#e50:checked~.app .i50,#e51:checked~.app .i51,#e52:checked~.app .i52{display:grid}
+#e35:checked~.app label[for=e35],#e36:checked~.app label[for=e36],#e37:checked~.app label[for=e37],#e38:checked~.app label[for=e38],#e39:checked~.app label[for=e39],#e40:checked~.app label[for=e40],#e41:checked~.app label[for=e41],#e42:checked~.app label[for=e42],#e43:checked~.app label[for=e43],#e44:checked~.app label[for=e44],#e45:checked~.app label[for=e45],#e46:checked~.app label[for=e46],#e47:checked~.app label[for=e47],#e48:checked~.app label[for=e48],#e49:checked~.app label[for=e49],#e50:checked~.app label[for=e50],#e51:checked~.app label[for=e51],#e52:checked~.app label[for=e52]{background:linear-gradient(135deg,#8f7fee,#659df2);border-color:#ffffff55;color:#fff}
+@keyframes mos{0%,100%{filter:blur(0)}50%{filter:url(#pix)}}
+@keyframes thr{50%{filter:grayscale(1) contrast(9)}}
+@keyframes wipe{0%{clip-path:inset(0 100% 0 0)}50%,60%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 100%)}}
+@keyframes iris{0%{clip-path:circle(0% at 50% 50%)}50%,60%{clip-path:circle(75% at 50% 50%)}100%{clip-path:circle(0% at 50% 50%)}}
+@keyframes blk{0%,100%{clip-path:polygon(0 0,0 0,0 100%,0 100%)}50%{clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}}
+@keyframes dis{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes lin{0%,100%{clip-path:inset(0 0 100% 0)}50%{clip-path:inset(0 0 0 0)}}
+@keyframes slo{0%,100%{transform:translateZ(110px) scale(1)}50%{transform:translateZ(110px) scale(1.15)}}
+@keyframes tdf{0%{transform:translateZ(110px) translateX(0)}20%{transform:translateZ(110px) translateX(0)}100%{transform:translateZ(110px) translateX(120px)}}
+@keyframes rev{from{transform:translateZ(110px) translateX(120px)}to{transform:translateZ(110px) translateX(-120px)}}
+@keyframes stp{0%{transform:translateZ(110px) translateX(0)}100%{transform:translateZ(110px) translateX(120px)}}
+@keyframes tdis{50%{filter:blur(10px) brightness(1.8);opacity:.4}}
+@keyframes cmp{50%{transform:translateZ(110px) translateX(80px) scaleX(1.4)}}
+.hp{background:radial-gradient(circle,#0006 0 1px,transparent 1.6px);background-size:8px 8px;mix-blend-mode:multiply}
+.nz{background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.05' numOctaves='3'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>");mix-blend-mode:soft-light;animation:gr .6s steps(4) infinite}
+.dust{background:radial-gradient(circle at 12% 20%,#fff 0 1px,transparent 2px),radial-gradient(circle at 70% 60%,#fff 0 2px,transparent 3px),radial-gradient(circle at 40% 85%,#fff 0 1px,transparent 2px),radial-gradient(circle at 88% 15%,#fff 0 1px,transparent 2px);animation:gr .3s steps(2) infinite}
+.edge{background:linear-gradient(#fff,#fff) 0 0/100% 4px no-repeat,linear-gradient(#fff,#fff) 0 100%/100% 4px no-repeat,linear-gradient(#fff,#fff) 0 0/4px 100% no-repeat,linear-gradient(#fff,#fff) 100% 0/4px 100% no-repeat;mix-blend-mode:screen}
+#e53:checked~.app .art{animation:mos 3s steps(1) infinite}
+#e54:checked~.app .art{animation:thr 2.5s ease-in-out infinite}
+#e55:checked~.app .art{filter:grayscale(1) contrast(1.8) invert(1) brightness(1.2)}
+#e56:checked~.app .art{filter:grayscale(1) contrast(3) brightness(1.1) drop-shadow(0 0 2px #000)}
+#e57:checked~.app .hp{opacity:1}
+#e58:checked~.app .nz{opacity:.8}
+#e59:checked~.app .dust{opacity:1}
+#e60:checked~.app .edge{opacity:1}
+#e61:checked~.app .art{animation:wipe 3.6s ease-in-out infinite}
+#e62:checked~.app .art{animation:iris 3.6s ease-in-out infinite}
+#e63:checked~.app .art{animation:blk 3.6s steps(6) infinite}
+#e64:checked~.app .art{animation:dis 3s ease-in-out infinite}
+#e65:checked~.app .art{animation:lin 3.6s ease-in-out infinite}
+#e66:checked~.app .fox{animation:slo 2.8s ease-in-out infinite;filter:blur(1px)}
+#e67:checked~.app .fox{animation:tdf 2.6s ease-out infinite}
+#e68:checked~.app .fox{animation:rev 2.4s linear infinite alternate}
+#e69:checked~.app .fox{animation:stp 1s steps(4) infinite}
+#e70:checked~.app .fox{animation:tdis 2.4s ease-in-out infinite}
+#e71:checked~.app .fox{animation:cmp 2s ease-in-out infinite}
+#e53:checked~.app .i53,#e54:checked~.app .i54,#e55:checked~.app .i55,#e56:checked~.app .i56,#e57:checked~.app .i57,#e58:checked~.app .i58,#e59:checked~.app .i59,#e60:checked~.app .i60,#e61:checked~.app .i61,#e62:checked~.app .i62,#e63:checked~.app .i63,#e64:checked~.app .i64,#e65:checked~.app .i65,#e66:checked~.app .i66,#e67:checked~.app .i67,#e68:checked~.app .i68,#e69:checked~.app .i69,#e70:checked~.app .i70,#e71:checked~.app .i71{display:grid}
+#e53:checked~.app label[for=e53],#e54:checked~.app label[for=e54],#e55:checked~.app label[for=e55],#e56:checked~.app label[for=e56],#e57:checked~.app label[for=e57],#e58:checked~.app label[for=e58],#e59:checked~.app label[for=e59],#e60:checked~.app label[for=e60],#e61:checked~.app label[for=e61],#e62:checked~.app label[for=e62],#e63:checked~.app label[for=e63],#e64:checked~.app label[for=e64],#e65:checked~.app label[for=e65],#e66:checked~.app label[for=e66],#e67:checked~.app label[for=e67],#e68:checked~.app label[for=e68],#e69:checked~.app label[for=e69],#e70:checked~.app label[for=e70],#e71:checked~.app label[for=e71]{background:linear-gradient(135deg,#8f7fee,#659df2);border-color:#ffffff55;color:#fff}
+@keyframes bev{0%,100%{filter:drop-shadow(-6px -6px 0 #fff) drop-shadow(6px 6px 0 #0008)}50%{filter:drop-shadow(-12px -12px 0 #fff) drop-shadow(12px 12px 0 #0008)}}
+@keyframes cub{0%,100%{transform:rotateY(0)}50%{transform:rotateY(180deg)}}
+@keyframes swp{0%{transform:translateZ(110px) rotateY(0)}100%{transform:translateZ(110px) rotateY(360deg)}}
+@keyframes sh3{50%{transform:translateZ(0) scale(1.1,.4) translateY(260px);opacity:.3}}
+@keyframes chs{0%,100%{filter:drop-shadow(12px 0 #ff6464) drop-shadow(-12px 0 #659df2)}50%{filter:drop-shadow(2px 0 #ff6464) drop-shadow(-2px 0 #659df2)}}
+@keyframes snw{from{transform:translateY(-20px)}to{transform:translateY(440px)}}
+@keyframes bub{from{transform:translateY(0)}to{transform:translateY(-440px)}}
+@keyframes wnd{from{transform:translateX(-80px)}to{transform:translateX(860px)}}
+@keyframes shat{0%,100%{transform:translateZ(110px)}50%{transform:translateZ(110px) rotate(6deg) scale(1.05)}}
+@keyframes rn{from{background-position:0 0}to{background-position:-40px 160px}}
+.sn i,.bb i,.wd i{position:absolute;display:block;border-radius:50%}
+.sn i{top:0;width:10px;height:10px;background:#fff;animation:snw 4s linear infinite}
+.bb i{bottom:-30px;width:26px;height:26px;border:2px solid #fff;animation:bub 5s ease-in infinite;background:#ffffff22}
+.wd i{height:3px;width:120px;border-radius:2px;background:#ffffffaa;animation:wnd 2.6s linear infinite}
+.rain{background:repeating-linear-gradient(105deg,#ffffff88 0 2px,transparent 2px 24px);background-size:40px 160px;animation:rn .4s linear infinite;mix-blend-mode:screen}
+.cmp{background:conic-gradient(#fff3,#fff0,#fff3);}
+#e72:checked~.app .art{animation:bev 2.4s ease-in-out infinite}
+#e73:checked~.app .art{animation:cub 4s ease-in-out infinite}
+#e74:checked~.app .fox{animation:swp 5s linear infinite}
+#e75:checked~.app .fox{filter:drop-shadow(0 90px 12px #0008);animation:sh3 3s ease-in-out infinite}
+#e76:checked~.app .art{animation:chs 1.8s ease-in-out infinite}
+#e77:checked~.app .art{filter:url(#rd)}
+#e78:checked~.app .art{filter:url(#gd)}
+#e79:checked~.app .art{filter:url(#bd)}
+#e80:checked~.app .art{filter:invert(1) grayscale(1) contrast(1.4)}
+#e81:checked~.app .art{filter:url(#sw)}
+#e82:checked~.app .sn{opacity:1}
+#e83:checked~.app .rain{opacity:1}
+#e84:checked~.app .bb{opacity:1}
+#e85:checked~.app .wd{opacity:1}
+#e86:checked~.app .fox{animation:shat 1.4s ease-in-out infinite;filter:contrast(1.6)}
+#e72:checked~.app .i72,#e73:checked~.app .i73,#e74:checked~.app .i74,#e75:checked~.app .i75,#e76:checked~.app .i76,#e77:checked~.app .i77,#e78:checked~.app .i78,#e79:checked~.app .i79,#e80:checked~.app .i80,#e81:checked~.app .i81,#e82:checked~.app .i82,#e83:checked~.app .i83,#e84:checked~.app .i84,#e85:checked~.app .i85,#e86:checked~.app .i86{display:grid}
+#e72:checked~.app label[for=e72],#e73:checked~.app label[for=e73],#e74:checked~.app label[for=e74],#e75:checked~.app label[for=e75],#e76:checked~.app label[for=e76],#e77:checked~.app label[for=e77],#e78:checked~.app label[for=e78],#e79:checked~.app label[for=e79],#e80:checked~.app label[for=e80],#e81:checked~.app label[for=e81],#e82:checked~.app label[for=e82],#e83:checked~.app label[for=e83],#e84:checked~.app label[for=e84],#e85:checked~.app label[for=e85],#e86:checked~.app label[for=e86]{background:linear-gradient(135deg,#8f7fee,#659df2);border-color:#ffffff55;color:#fff}
+@keyframes kyg{0%,100%{filter:none}50%{filter:url(#ky)}}
+@keyframes mt1{0%,100%{clip-path:circle(18% at 50% 50%)}50%{clip-path:circle(60% at 50% 50%)}}
+@keyframes mt2{0%,100%{clip-path:inset(20% 20% 20% 20% round 40px)}50%{clip-path:inset(0 0 0 0 round 22px)}}
+@keyframes mt3{0%,100%{clip-path:polygon(50% 0,100% 100%,0 100%)}50%{clip-path:polygon(50% 0,100% 0,100% 100%,0 100%,0 0)}}
+@keyframes mt4{0%,100%{clip-path:ellipse(45% 25% at 50% 50%)}50%{clip-path:ellipse(65% 65% at 50% 50%)}}
+@keyframes tw{0%,100%{opacity:0;transform:translateZ(150px) translateY(20px)}30%,70%{opacity:1;transform:translateZ(150px) translateY(0)}}
+@keyframes tyw{from{width:0}to{width:320px}}
+@keyframes ctr{from{--n:0}to{--n:100}}
+@keyframes tgl{0%,100%{transform:translateZ(150px)}50%{transform:translateZ(150px) skewX(-12deg) translateX(10px);text-shadow:6px 0 #f0f,-6px 0 #0ff}}
+@keyframes tgw{50%{text-shadow:0 0 12px #fff,0 0 40px #8f7fee,0 0 80px #8f7fee}}
+@keyframes bar{from{width:0}to{width:100%}}
+@keyframes tgh{0%,100%{opacity:.2}50%{opacity:1}}
+.tx{position:absolute;left:60px;top:30px;font:700 66px 'Noto Sans',Arial,sans-serif;color:#fff;letter-spacing:.04em;transform:translateZ(150px);white-space:nowrap;overflow:hidden}
+.ov.t1,.ov.t2,.ov.t3,.ov.t4{display:block}
+.t1 .tx{animation:tw 3s ease-in-out infinite}
+.t2 .tx{border-right:5px solid #fff;animation:tyw 2.4s steps(10) infinite alternate}
+.t3 .tx{animation:tgl .9s steps(2) infinite}
+.t4 .tx{animation:tgw 2s ease-in-out infinite}
+.guide{background:linear-gradient(#fff,#fff) 50% 0/2px 100% no-repeat,linear-gradient(#fff,#fff) 0 50%/100% 2px no-repeat,linear-gradient(#ff6464,#ff6464) 33% 0/1px 100% no-repeat,linear-gradient(#ff6464,#ff6464) 66% 0/1px 100% no-repeat,linear-gradient(#ff6464,#ff6464) 0 33%/100% 1px no-repeat,linear-gradient(#ff6464,#ff6464) 0 66%/100% 1px no-repeat}
+.bars{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:0 120px}
+.bars i{display:block;height:20px;border-radius:10px;background:linear-gradient(90deg,#8f7fee,#2dc75c);animation:bar 2.4s ease-in-out infinite alternate}
+.safe{border:3px dashed #ffdc4a;margin:40px 70px}
+.vec{mix-blend-mode:normal}
+#e87:checked~.app .art{animation:kyg 3s ease-in-out infinite}
+#e88:checked~.app .sky{filter:hue-rotate(160deg) saturate(1.4);animation:hue 5s linear infinite}
+#e89:checked~.app .sun{filter:brightness(2.4) contrast(1.4)}#e89:checked~.app .art{filter:saturate(.4)}
+#e90:checked~.app .mount{filter:drop-shadow(0 0 0 #fff) saturate(0) brightness(2)}
+#e91:checked~.app .art{animation:mt1 3s ease-in-out infinite}
+#e92:checked~.app .art{animation:mt2 3s ease-in-out infinite}
+#e93:checked~.app .art{animation:mt3 3s ease-in-out infinite}
+#e94:checked~.app .art{animation:mt4 3s ease-in-out infinite}
+#e95:checked~.app .art{mask-image:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
+#e96:checked~.app .art{mask-image:radial-gradient(circle,#000 30%,transparent 78%)}
+#e97:checked~.app .t1{opacity:1}
+#e98:checked~.app .t2{opacity:1}
+#e99:checked~.app .t3{opacity:1}
+#e100:checked~.app .t4{opacity:1}
+#e101:checked~.app .guide{opacity:1}
+#e102:checked~.app .safe{opacity:1}
+#e103:checked~.app .bars{opacity:1}
+#e104:checked~.app .art{filter:grayscale(1) contrast(2.2) brightness(.9)}#e104:checked~.app .hp{opacity:.6}
+#e105:checked~.app .art{filter:saturate(1.8) contrast(1.15) brightness(1.1)}
+#e87:checked~.app .i87,#e88:checked~.app .i88,#e89:checked~.app .i89,#e90:checked~.app .i90,#e91:checked~.app .i91,#e92:checked~.app .i92,#e93:checked~.app .i93,#e94:checked~.app .i94,#e95:checked~.app .i95,#e96:checked~.app .i96,#e97:checked~.app .i97,#e98:checked~.app .i98,#e99:checked~.app .i99,#e100:checked~.app .i100,#e101:checked~.app .i101,#e102:checked~.app .i102,#e103:checked~.app .i103,#e104:checked~.app .i104,#e105:checked~.app .i105{display:grid}
+#e87:checked~.app label[for=e87],#e88:checked~.app label[for=e88],#e89:checked~.app label[for=e89],#e90:checked~.app label[for=e90],#e91:checked~.app label[for=e91],#e92:checked~.app label[for=e92],#e93:checked~.app label[for=e93],#e94:checked~.app label[for=e94],#e95:checked~.app label[for=e95],#e96:checked~.app label[for=e96],#e97:checked~.app label[for=e97],#e98:checked~.app label[for=e98],#e99:checked~.app label[for=e99],#e100:checked~.app label[for=e100],#e101:checked~.app label[for=e101],#e102:checked~.app label[for=e102],#e103:checked~.app label[for=e103],#e104:checked~.app label[for=e104],#e105:checked~.app label[for=e105]{background:linear-gradient(135deg,#8f7fee,#659df2);border-color:#ffffff55;color:#fff}
+</style><style>/* layer: preflights */
+*,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-z:0;--un-scale-x:1;--un-scale-y:1;--un-scale-z:1;--un-skew-x:0;--un-skew-y:0;--un-translate-x:0;--un-translate-y:0;--un-translate-z:0;--un-pan-x: ;--un-pan-y: ;--un-pinch-zoom: ;--un-scroll-snap-strictness:proximity;--un-ordinal: ;--un-slashed-zero: ;--un-numeric-figure: ;--un-numeric-spacing: ;--un-numeric-fraction: ;--un-border-spacing-x:0;--un-border-spacing-y:0;--un-ring-offset-shadow:0 0 rgb(0 0 0 / 0);--un-ring-shadow:0 0 rgb(0 0 0 / 0);--un-shadow-inset: ;--un-shadow:0 0 rgb(0 0 0 / 0);--un-ring-inset: ;--un-ring-offset-width:0px;--un-ring-offset-color:#fff;--un-ring-width:0px;--un-ring-color:rgb(147 197 253 / 0.5);--un-blur: ;--un-brightness: ;--un-contrast: ;--un-drop-shadow: ;--un-grayscale: ;--un-hue-rotate: ;--un-invert: ;--un-saturate: ;--un-sepia: ;--un-backdrop-blur: ;--un-backdrop-brightness: ;--un-backdrop-contrast: ;--un-backdrop-grayscale: ;--un-backdrop-hue-rotate: ;--un-backdrop-invert: ;--un-backdrop-opacity: ;--un-backdrop-saturate: ;--un-backdrop-sepia: ;}::backdrop{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-z:0;--un-scale-x:1;--un-scale-y:1;--un-scale-z:1;--un-skew-x:0;--un-skew-y:0;--un-translate-x:0;--un-translate-y:0;--un-translate-z:0;--un-pan-x: ;--un-pan-y: ;--un-pinch-zoom: ;--un-scroll-snap-strictness:proximity;--un-ordinal: ;--un-slashed-zero: ;--un-numeric-figure: ;--un-numeric-spacing: ;--un-numeric-fraction: ;--un-border-spacing-x:0;--un-border-spacing-y:0;--un-ring-offset-shadow:0 0 rgb(0 0 0 / 0);--un-ring-shadow:0 0 rgb(0 0 0 / 0);--un-shadow-inset: ;--un-shadow:0 0 rgb(0 0 0 / 0);--un-ring-inset: ;--un-ring-offset-width:0px;--un-ring-offset-color:#fff;--un-ring-width:0px;--un-ring-color:rgb(147 197 253 / 0.5);--un-blur: ;--un-brightness: ;--un-contrast: ;--un-drop-shadow: ;--un-grayscale: ;--un-hue-rotate: ;--un-invert: ;--un-saturate: ;--un-sepia: ;--un-backdrop-blur: ;--un-backdrop-brightness: ;--un-backdrop-contrast: ;--un-backdrop-grayscale: ;--un-backdrop-hue-rotate: ;--un-backdrop-invert: ;--un-backdrop-opacity: ;--un-backdrop-saturate: ;--un-backdrop-sepia: ;}
+/* layer: default */
+.fixed{position:fixed;}
+.grid{display:grid;}
+.mb{margin-bottom:1rem;}
+.mt1{margin-top:0.25rem;}
+.mt2{margin-top:0.5rem;}
+.mt3{margin-top:0.75rem;}
+.mt4{margin-top:1rem;}
+.h1{height:0.25rem;}
+.h2{height:0.5rem;}
+.b,
+.border{border-width:1px;}
+.rd,
+.rounded{border-radius:0.25rem;}
+.shadow{--un-shadow:var(--un-shadow-inset) 0 1px 3px 0 var(--un-shadow-color, rgb(0 0 0 / 0.1)),var(--un-shadow-inset) 0 1px 2px -1px var(--un-shadow-color, rgb(0 0 0 / 0.1));box-shadow:var(--un-ring-offset-shadow), var(--un-ring-shadow), var(--un-shadow);}
+.blur{--un-blur:blur(8px);filter:var(--un-blur) var(--un-brightness) var(--un-contrast) var(--un-drop-shadow) var(--un-grayscale) var(--un-hue-rotate) var(--un-invert) var(--un-saturate) var(--un-sepia);}
+.ease-in{transition-timing-function:cubic-bezier(0.4, 0, 1, 1);}
+.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);}
+.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1);}</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<filter id="post"><feComponentTransfer><feFuncR type="discrete" tableValues="0 .33 .66 1"></feFuncR><feFuncG type="discrete" tableValues="0 .33 .66 1"></feFuncG><feFuncB type="discrete" tableValues="0 .33 .66 1"></feFuncB></feComponentTransfer></filter>
+<filter id="disp"><feTurbulence type="fractalNoise" baseFrequency=".012 .05" numOctaves="2" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="40"></feDisplacementMap></filter>
+<filter id="turb"><feTurbulence type="turbulence" baseFrequency=".02" numOctaves="2" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="60"></feDisplacementMap></filter>
+</defs></svg>
+<input type="radio" name="fx" id="e1"><input type="radio" name="fx" id="e2" checked=""><input type="radio" name="fx" id="e3"><input type="radio" name="fx" id="e4"><input type="radio" name="fx" id="e5"><input type="radio" name="fx" id="e6"><input type="radio" name="fx" id="e7"><input type="radio" name="fx" id="e8"><input type="radio" name="fx" id="e9"><input type="radio" name="fx" id="e10"><input type="radio" name="fx" id="e11"><input type="radio" name="fx" id="e12"><input type="radio" name="fx" id="e13"><input type="radio" name="fx" id="e14"><input type="radio" name="fx" id="e15"><input type="radio" name="fx" id="e16"><input type="radio" name="fx" id="e17"><input type="radio" name="fx" id="e18"><input type="radio" name="fx" id="e19"><input type="radio" name="fx" id="e21"><input type="radio" name="fx" id="e22"><input type="radio" name="fx" id="e23"><input type="radio" name="fx" id="e24"><input type="radio" name="fx" id="e25"><input type="radio" name="fx" id="e26"><input type="radio" name="fx" id="e27"><input type="radio" name="fx" id="e28"><input type="radio" name="fx" id="e29"><input type="radio" name="fx" id="e30"><input type="radio" name="fx" id="e31"><input type="radio" name="fx" id="e32"><input type="radio" name="fx" id="e33"><input type="radio" name="fx" id="e34"><input type="radio" name="fx" id="e35"><input type="radio" name="fx" id="e36"><input type="radio" name="fx" id="e37"><input type="radio" name="fx" id="e38"><input type="radio" name="fx" id="e39"><input type="radio" name="fx" id="e40"><input type="radio" name="fx" id="e41"><input type="radio" name="fx" id="e42"><input type="radio" name="fx" id="e43"><input type="radio" name="fx" id="e44"><input type="radio" name="fx" id="e45"><input type="radio" name="fx" id="e46"><input type="radio" name="fx" id="e47"><input type="radio" name="fx" id="e48"><input type="radio" name="fx" id="e49"><input type="radio" name="fx" id="e50"><input type="radio" name="fx" id="e51"><input type="radio" name="fx" id="e52"><input type="radio" name="fx" id="e53"><input type="radio" name="fx" id="e54"><input type="radio" name="fx" id="e55"><input type="radio" name="fx" id="e56"><input type="radio" name="fx" id="e57"><input type="radio" name="fx" id="e58"><input type="radio" name="fx" id="e59"><input type="radio" name="fx" id="e60"><input type="radio" name="fx" id="e61"><input type="radio" name="fx" id="e62"><input type="radio" name="fx" id="e63"><input type="radio" name="fx" id="e64"><input type="radio" name="fx" id="e65"><input type="radio" name="fx" id="e66"><input type="radio" name="fx" id="e67"><input type="radio" name="fx" id="e68"><input type="radio" name="fx" id="e69"><input type="radio" name="fx" id="e70"><input type="radio" name="fx" id="e71"><input type="radio" name="fx" id="e72"><input type="radio" name="fx" id="e73"><input type="radio" name="fx" id="e74"><input type="radio" name="fx" id="e75"><input type="radio" name="fx" id="e76"><input type="radio" name="fx" id="e77"><input type="radio" name="fx" id="e78"><input type="radio" name="fx" id="e79"><input type="radio" name="fx" id="e80"><input type="radio" name="fx" id="e81"><input type="radio" name="fx" id="e82"><input type="radio" name="fx" id="e83"><input type="radio" name="fx" id="e84"><input type="radio" name="fx" id="e85"><input type="radio" name="fx" id="e86"><input type="radio" name="fx" id="e87"><input type="radio" name="fx" id="e88"><input type="radio" name="fx" id="e89"><input type="radio" name="fx" id="e90"><input type="radio" name="fx" id="e91"><input type="radio" name="fx" id="e92"><input type="radio" name="fx" id="e93"><input type="radio" name="fx" id="e94"><input type="radio" name="fx" id="e95"><input type="radio" name="fx" id="e96"><input type="radio" name="fx" id="e97"><input type="radio" name="fx" id="e98"><input type="radio" name="fx" id="e99"><input type="radio" name="fx" id="e100"><input type="radio" name="fx" id="e101"><input type="radio" name="fx" id="e102"><input type="radio" name="fx" id="e103"><input type="radio" name="fx" id="e104"><input type="radio" name="fx" id="e105">
+<svg width="0" height="0" style="position:absolute"><defs><filter id="ky"><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -1 2 -1 0 .2"></feColorMatrix></filter></defs></svg>
+<svg width="0" height="0" style="position:absolute"><defs><filter id="rd"><feColorMatrix values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"></feColorMatrix></filter><filter id="gd"><feColorMatrix values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0"></feColorMatrix></filter><filter id="bd"><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0"></feColorMatrix></filter><filter id="sw"><feColorMatrix values="0 0 1 0 0  0 1 0 0 0  1 0 0 0 0  0 0 0 1 0"></feColorMatrix></filter></defs></svg>
+<svg width="0" height="0" style="position:absolute"><defs><filter id="pix"><feFlood x="4" y="4" width="2" height="2" flood-color="#000"></feFlood><feComposite width="14" height="14"></feComposite><feTile result="t"></feTile><feComposite in="SourceGraphic" in2="t" operator="in"></feComposite><feMorphology operator="dilate" radius="7"></feMorphology></filter></defs></svg>
+<svg width="0" height="0" style="position:absolute"><defs><filter id="rip"><feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="1" result="n"><animate attributeName="baseFrequency" dur="4s" values="0.01 0.03;0.02 0.05;0.01 0.03" repeatCount="indefinite"></animate></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="34"></feDisplacementMap></filter></defs></svg>
+<svg width="0" height="0" style="position:absolute"><defs><filter id="mb"><feGaussianBlur stdDeviation="16 0"></feGaussianBlur></filter><filter id="sh"><feConvolveMatrix order="3" kernelMatrix="0 -1 0 -1 5 -1 0 -1 0"></feConvolveMatrix></filter></defs></svg>
+<div class="app">
+<div class="side">
+<div class="brand"><div class="logo">Fx</div><h1>FX Lab<br><span style="font-size:12px;font-weight:400;color:#9aa0c8">After Effects x AR preview</span></h1></div>
+<p class="sub">Pick an effect. It runs live on the vector artwork in the AR scene.<br><span style="color:#c6dcff;font-weight:700">ავტორი: ნათია კიკვაძე</span></p>
+<div class="list"><div class="sec">Starter set</div>
+<label for="e1"><b>01</b><span>Gaussian Blur</span><em>Blur</em></label>
+<label for="e2"><b>02</b><span>Glow</span><em>Stylize</em></label>
+<label for="e3"><b>03</b><span>Drop Shadow</span><em>Perspective</em></label>
+<label for="e4"><b>04</b><span>Hue / Saturation</span><em>Color</em></label>
+<label for="e5"><b>05</b><span>Invert</span><em>Channel</em></label>
+<label for="e6"><b>06</b><span>Posterize</span><em>Stylize</em></label>
+<label for="e7"><b>07</b><span>Wave Warp</span><em>Distort</em></label>
+<label for="e8"><b>08</b><span>Turbulent Displace</span><em>Distort</em></label>
+<label for="e9"><b>09</b><span>RGB Glitch</span><em>Channel</em></label>
+<label for="e10"><b>10</b><span>Mirror Flip</span><em>Distort</em></label>
+<label for="e11"><b>11</b><span>Echo</span><em>Time</em></label>
+<label for="e12"><b>12</b><span>Film Grain</span><em>Noise</em></label>
+<label for="e13"><b>13</b><span>Vignette</span><em>Lighting</em></label>
+<label for="e14"><b>14</b><span>Black &amp; White</span><em>Color</em></label>
+<label for="e15"><b>15</b><span>CRT Scanlines</span><em>Stylize</em></label>
+<label for="e16"><b>16</b><span>Particle World</span><em>Simulation</em></label>
+<label for="e17"><b>17</b><span>Light Sweep</span><em>Generate</em></label>
+<label for="e18"><b>18</b><span>Strobe Light</span><em>Stylize</em></label>
+<label for="e19"><b>19</b><span>3D Camera Orbit</span><em>Camera</em></label>
+<div class="sec">Blur &amp; Sharpen</div><div class="subsec">Blur</div>
+<label for="e21"><b>21</b><span>Fast Box Blur</span><em>Blur</em></label>
+<label for="e22"><b>22</b><span>Directional Blur</span><em>Blur</em></label>
+<label for="e23"><b>23</b><span>Radial Blur</span><em>Blur</em></label>
+<label for="e24"><b>24</b><span>Camera Lens Blur</span><em>Blur</em></label>
+<div class="subsec">Sharpen</div>
+<label for="e25"><b>25</b><span>Sharpen</span><em>Sharpen</em></label>
+<label for="e26"><b>26</b><span>Unsharp Mask</span><em>Sharpen</em></label>
+<div class="sec">Color Correction</div><div class="subsec">Levels and curves</div>
+<label for="e27"><b>27</b><span>Brightness &amp; Contrast</span><em>Levels</em></label>
+<label for="e28"><b>28</b><span>Exposure</span><em>Levels</em></label>
+<label for="e29"><b>29</b><span>Curves</span><em>Levels</em></label>
+<div class="subsec">Color looks</div>
+<label for="e30"><b>30</b><span>Tint</span><em>Color</em></label>
+<label for="e31"><b>31</b><span>Tritone</span><em>Color</em></label>
+<label for="e32"><b>32</b><span>Vibrance</span><em>Color</em></label>
+<label for="e33"><b>33</b><span>Photo Filter</span><em>Color</em></label>
+<label for="e34"><b>34</b><span>Colorama</span><em>Color</em></label>
+<div class="sec">Distort</div><div class="subsec">Warp</div>
+<label for="e35"><b>35</b><span>Bulge</span><em>Warp</em></label>
+<label for="e36"><b>36</b><span>Twirl</span><em>Warp</em></label>
+<label for="e37"><b>37</b><span>Ripple</span><em>Warp</em></label>
+<label for="e38"><b>38</b><span>Spherize</span><em>Warp</em></label>
+<div class="subsec">Transform</div>
+<label for="e39"><b>39</b><span>Offset</span><em>Transform</em></label>
+<label for="e40"><b>40</b><span>Corner Pin</span><em>Transform</em></label>
+<label for="e41"><b>41</b><span>Motion Tile</span><em>Transform</em></label>
+<label for="e42"><b>42</b><span>Polar Coordinates</span><em>Transform</em></label>
+<div class="sec">Generate</div><div class="subsec">Light</div>
+<label for="e43"><b>43</b><span>Lens Flare</span><em>Light</em></label>
+<label for="e44"><b>44</b><span>Beam</span><em>Light</em></label>
+<label for="e45"><b>45</b><span>Lightning</span><em>Light</em></label>
+<div class="subsec">Fill and gradient</div>
+<label for="e46"><b>46</b><span>4-Color Gradient</span><em>Gradient</em></label>
+<label for="e47"><b>47</b><span>Gradient Ramp</span><em>Gradient</em></label>
+<label for="e48"><b>48</b><span>Fill</span><em>Fill</em></label>
+<div class="subsec">Patterns</div>
+<label for="e49"><b>49</b><span>Grid</span><em>Pattern</em></label>
+<label for="e50"><b>50</b><span>Radio Waves</span><em>Pattern</em></label>
+<label for="e51"><b>51</b><span>Cell Pattern</span><em>Pattern</em></label>
+<label for="e52"><b>52</b><span>Checkerboard</span><em>Pattern</em></label>
+<div class="sec">Stylize</div><div class="subsec">Pixel looks</div>
+<label for="e53"><b>53</b><span>Mosaic</span><em>Pixel</em></label>
+<label for="e54"><b>54</b><span>Threshold</span><em>Pixel</em></label>
+<label for="e55"><b>55</b><span>Find Edges</span><em>Edge</em></label>
+<label for="e56"><b>56</b><span>Cartoon</span><em>Edge</em></label>
+<label for="e57"><b>57</b><span>Halftone</span><em>Print</em></label>
+<div class="sec">Noise &amp; Grain</div><div class="subsec">Texture</div>
+<label for="e58"><b>58</b><span>Fractal Noise</span><em>Noise</em></label>
+<label for="e59"><b>59</b><span>Dust &amp; Scratches</span><em>Noise</em></label>
+<label for="e60"><b>60</b><span>Roughen Edges</span><em>Noise</em></label>
+<div class="sec">Transition</div><div class="subsec">Reveals</div>
+<label for="e61"><b>61</b><span>Linear Wipe</span><em>Reveal</em></label>
+<label for="e62"><b>62</b><span>Iris Wipe</span><em>Reveal</em></label>
+<label for="e63"><b>63</b><span>Block Dissolve</span><em>Reveal</em></label>
+<label for="e64"><b>64</b><span>Card Fade</span><em>Reveal</em></label>
+<label for="e65"><b>65</b><span>Venetian Blinds</span><em>Reveal</em></label>
+<div class="sec">Time</div><div class="subsec">Motion timing</div>
+<label for="e66"><b>66</b><span>Time Displacement</span><em>Time</em></label>
+<label for="e67"><b>67</b><span>Posterize Time</span><em>Time</em></label>
+<label for="e68"><b>68</b><span>Time Reverse</span><em>Time</em></label>
+<label for="e69"><b>69</b><span>Stepped Motion</span><em>Time</em></label>
+<label for="e70"><b>70</b><span>Motion Trail</span><em>Time</em></label>
+<label for="e71"><b>71</b><span>Time Remap</span><em>Time</em></label>
+<div class="sec">Perspective</div><div class="subsec">3D look</div>
+<label for="e72"><b>72</b><span>Bevel Alpha</span><em>3D</em></label>
+<label for="e73"><b>73</b><span>Card Flip</span><em>3D</em></label>
+<label for="e74"><b>74</b><span>Swivel</span><em>3D</em></label>
+<label for="e75"><b>75</b><span>Cast Shadow</span><em>3D</em></label>
+<div class="sec">Channel</div><div class="subsec">Split and shift</div>
+<label for="e76"><b>76</b><span>Chromatic Aberration</span><em>Channel</em></label>
+<label for="e77"><b>77</b><span>Red Channel Only</span><em>Channel</em></label>
+<label for="e78"><b>78</b><span>Green Channel Only</span><em>Channel</em></label>
+<label for="e79"><b>79</b><span>Blue Channel Only</span><em>Channel</em></label>
+<label for="e80"><b>80</b><span>Solid Composite</span><em>Channel</em></label>
+<label for="e81"><b>81</b><span>Channel Swap</span><em>Channel</em></label>
+<div class="sec">Simulation</div><div class="subsec">Weather and physics</div>
+<label for="e82"><b>82</b><span>Snow</span><em>Weather</em></label>
+<label for="e83"><b>83</b><span>Rain</span><em>Weather</em></label>
+<label for="e84"><b>84</b><span>Bubbles</span><em>Particles</em></label>
+<label for="e85"><b>85</b><span>Wind Streaks</span><em>Weather</em></label>
+<label for="e86"><b>86</b><span>Shatter</span><em>Physics</em></label>
+<div class="sec">Keying</div><div class="subsec">Remove color</div>
+<label for="e87"><b>87</b><span>Color Key</span><em>Keying</em></label>
+<label for="e88"><b>88</b><span>Keylight Sky</span><em>Keying</em></label>
+<label for="e89"><b>89</b><span>Luma Key</span><em>Keying</em></label>
+<label for="e90"><b>90</b><span>Spill Suppressor</span><em>Keying</em></label>
+<div class="sec">Matte</div><div class="subsec">Shape masks</div>
+<label for="e91"><b>91</b><span>Circle Mask</span><em>Mask</em></label>
+<label for="e92"><b>92</b><span>Rounded Mask</span><em>Mask</em></label>
+<label for="e93"><b>93</b><span>Triangle Mask</span><em>Mask</em></label>
+<label for="e94"><b>94</b><span>Ellipse Mask</span><em>Mask</em></label>
+<div class="subsec">Feather</div>
+<label for="e95"><b>95</b><span>Linear Feather</span><em>Matte</em></label>
+<label for="e96"><b>96</b><span>Radial Feather</span><em>Matte</em></label>
+<div class="sec">Text</div><div class="subsec">Animators</div>
+<label for="e97"><b>97</b><span>Fade Up Title</span><em>Text</em></label>
+<label for="e98"><b>98</b><span>Typewriter</span><em>Text</em></label>
+<label for="e99"><b>99</b><span>Glitch Title</span><em>Text</em></label>
+<label for="e100"><b>100</b><span>Neon Glow Title</span><em>Text</em></label>
+<div class="sec">Utility</div><div class="subsec">Guides</div>
+<label for="e101"><b>101</b><span>Composition Guides</span><em>Guide</em></label>
+<label for="e102"><b>102</b><span>Title Safe</span><em>Guide</em></label>
+<label for="e103"><b>103</b><span>Level Meter</span><em>Guide</em></label>
+<div class="subsec">Conversion</div>
+<label for="e104"><b>104</b><span>Cineon Print</span><em>Convert</em></label>
+<label for="e105"><b>105</b><span>HDR Boost</span><em>Convert</em></label>
+</div></div>
+<div class="main">
+<div class="top"><span class="chip"><i></i>AR session live</span><span class="chip">Surface detected</span><span class="chip">Layers: 4</span><span class="chip">Hover to flatten the view</span></div>
+<div class="ar"><div class="floor"></div>
+<div class="world"><div class="art">
+<div class="ly sky"><svg viewBox="0 0 800 400"><defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1b6e"></stop><stop offset=".6" stop-color="#d9558a"></stop><stop offset="1" stop-color="#fe9f4d"></stop></linearGradient></defs><rect width="800" height="400" rx="22" fill="url(#g1)"></rect><g fill="#fff"><circle cx="90" cy="50" r="2"></circle><circle cx="210" cy="90" r="3"></circle><circle cx="330" cy="40" r="2"></circle><circle cx="450" cy="80" r="2"></circle><circle cx="700" cy="40" r="3"></circle><circle cx="640" cy="100" r="2"></circle><circle cx="130" cy="140" r="2"></circle></g></svg></div>
+<div class="ly sun"><svg viewBox="0 0 800 400"><circle cx="590" cy="170" r="95" fill="#ffdc4a" opacity=".25"></circle><circle cx="590" cy="170" r="66" fill="#ffdc4a"></circle><circle cx="590" cy="170" r="40" fill="#fff6b6"></circle></svg></div>
+<div class="ly mount"><svg viewBox="0 0 800 400"><polygon points="0,300 140,170 250,260 380,140 520,270 650,190 800,290 800,400 0,400" fill="#6631d7"></polygon><polygon points="0,340 120,260 260,330 420,240 580,330 720,265 800,320 800,400 0,400" fill="#305bab"></polygon></svg></div>
+<div class="ly fox"><svg viewBox="0 0 800 400"><path d="M0,360 Q200,320 420,350 T800,345 L800,400 L0,400Z" fill="#067429"></path><path d="M200,300 Q120,290 110,230 Q170,250 215,285Z" fill="#fe9f4d"></path><path d="M110,230 Q125,215 140,238 Q125,246 110,230Z" fill="#fff"></path><ellipse cx="270" cy="305" rx="72" ry="38" fill="#fe9f4d"></ellipse><rect x="225" y="325" width="14" height="32" rx="6" fill="#9b4a08"></rect><rect x="300" y="325" width="14" height="32" rx="6" fill="#9b4a08"></rect><circle cx="340" cy="270" r="30" fill="#fe9f4d"></circle><polygon points="318,250 322,212 345,240" fill="#fe9f4d"></polygon><polygon points="350,240 372,215 368,258" fill="#fe9f4d"></polygon><polygon points="335,282 372,290 340,306" fill="#fff"></polygon><circle cx="352" cy="268" r="4" fill="#1a1a1a"></circle><circle cx="373" cy="288" r="4" fill="#1a1a1a"></circle></svg></div>
+<div class="ly ov grain"></div><div class="ly ov vig"></div><div class="ly ov scan"></div><div class="ly ov shine"></div>
+<div class="ly ov flare"></div><div class="ly ov beam"></div><div class="ly ov bolt"><svg viewBox="0 0 800 400"><polyline points="560,0 520,90 575,110 500,210 560,235 470,340" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"></polyline><polyline points="560,0 520,90 575,110 500,210 560,235 470,340" fill="none" stroke="#8f7fee" stroke-width="16" opacity=".5" stroke-linejoin="round"></polyline></svg></div><div class="ly ov g4"></div><div class="ly ov gramp"></div><div class="ly ov fillc"></div><div class="ly ov gridc"></div><div class="ly ov rw"><i></i><i style="animation-delay:1s"></i><i style="animation-delay:2s"></i></div><div class="ly ov cell"></div><div class="ly ov chk"></div>
+<div class="ly ov hp"></div><div class="ly ov nz"></div><div class="ly ov dust"></div><div class="ly ov edge"></div>
+<div class="ly ov sn"><i style="left:6%"></i><i style="left:18%;animation-delay:.8s"></i><i style="left:30%;animation-delay:2s"></i><i style="left:42%;animation-delay:1.2s"></i><i style="left:54%;animation-delay:2.8s"></i><i style="left:66%;animation-delay:.4s"></i><i style="left:78%;animation-delay:1.8s"></i><i style="left:90%;animation-delay:3.2s"></i></div><div class="ly ov rain"></div><div class="ly ov bb"><i style="left:10%"></i><i style="left:28%;animation-delay:1.5s"></i><i style="left:46%;animation-delay:.7s"></i><i style="left:64%;animation-delay:2.3s"></i><i style="left:82%;animation-delay:3.1s"></i></div><div class="ly ov wd"><i style="top:20%"></i><i style="top:38%;animation-delay:.9s"></i><i style="top:58%;animation-delay:1.6s"></i><i style="top:78%;animation-delay:.3s"></i></div>
+<div class="ly ov t1"><div class="tx">AURORA</div></div><div class="ly ov t2"><div class="tx">AR LAB</div></div><div class="ly ov t3"><div class="tx">GLITCH</div></div><div class="ly ov t4"><div class="tx">NEON</div></div><div class="ly ov guide"></div><div class="ly ov safe"></div><div class="ly ov bars"><i></i><i style="animation-delay:.3s"></i><i style="animation-delay:.6s"></i></div>
+<div class="ly ov parts"><i style="left:8%;animation-delay:0s"></i><i style="left:20%;animation-delay:1.2s"></i><i style="left:33%;animation-delay:2.4s"></i><i style="left:45%;animation-delay:.6s"></i><i style="left:58%;animation-delay:1.8s"></i><i style="left:70%;animation-delay:3s"></i><i style="left:82%;animation-delay:.3s"></i><i style="left:92%;animation-delay:2.1s"></i></div>
+</div></div>
+<div class="ret"></div>
+<div class="hud"><s></s><s></s><s></s><s></s><p class="l1">TRACKING 60 FPS</p><p class="l2">PLANE 1.2 M</p><p class="l3">ARTWORK.AI / 4 LAYERS</p></div>
+<div class="layers"><div><i style="background:#fe9f4d"></i>Fox</div><div><i style="background:#305bab"></i>Mountains</div><div><i style="background:#ffdc4a"></i>Sun</div><div><i style="background:#d9558a"></i>Sky</div></div>
+</div>
+<div class="card">
+<div class="info i1"><div><h2>Gaussian Blur</h2><span class="tag">Blur &amp; Sharpen / whole artwork</span><p>Softens pixels by averaging neighbours across a set radius.</p></div><p class="res"><b>Visual result</b><br>The whole scene breathes in and out of focus, like a camera pulling focus.</p></div>
+<div class="info i2"><div><h2>Glow</h2><span class="tag">Stylize / Sun layer</span><p>Bleeds the brightest areas outward and lifts their intensity.</p></div><p class="res"><b>Visual result</b><br>The sun pulses with a warm halo that spills over the sky behind it.</p></div>
+<div class="info i3"><div><h2>Drop Shadow</h2><span class="tag">Perspective / Fox and Mountains</span><p>Adds an offset shadow with set distance, direction and softness.</p></div><p class="res"><b>Visual result</b><br>The fox and ridge lift off the page with hard offset shadows.</p></div>
+<div class="info i4"><div><h2>Hue / Saturation</h2><span class="tag">Color Correction / whole artwork</span><p>Rotates every color around the color wheel.</p></div><p class="res"><b>Visual result</b><br>Sunset cycles through teal, magenta and gold palettes in a loop.</p></div>
+<div class="info i5"><div><h2>Invert</h2><span class="tag">Channel / whole artwork</span><p>Flips each color to its opposite value.</p></div><p class="res"><b>Visual result</b><br>A negative-film version of the scene with the colors kept readable.</p></div>
+<div class="info i6"><div><h2>Posterize</h2><span class="tag">Stylize / whole artwork</span><p>Limits each channel to a few tone levels.</p></div><p class="res"><b>Visual result</b><br>Gradients collapse into flat color bands, like a screen print.</p></div>
+<div class="info i7"><div><h2>Wave Warp</h2><span class="tag">Distort / Mountains layer</span><p>Pushes pixels along a sine wave, with speed and height controls.</p></div><p class="res"><b>Visual result</b><br>The mountain range ripples and sways like cloth in wind.</p></div>
+<div class="info i8"><div><h2>Turbulent Displace</h2><span class="tag">Distort / whole artwork</span><p>Shifts pixels using fractal noise as a map.</p></div><p class="res"><b>Visual result</b><br>The scene melts into a heat-haze, watercolor look.</p></div>
+<div class="info i9"><div><h2>RGB Glitch</h2><span class="tag">Channel / Fox layer</span><p>Splits color channels and jitters them in stepped frames.</p></div><p class="res"><b>Visual result</b><br>The fox flickers with magenta and cyan fringes and sudden slips.</p></div>
+<div class="info i10"><div><h2>Mirror Flip</h2><span class="tag">Distort / whole artwork</span><p>Reflects the layer across an axis.</p></div><p class="res"><b>Visual result</b><br>The artwork flips horizontally and back on a timed loop.</p></div>
+<div class="info i11"><div><h2>Echo</h2><span class="tag">Time / Fox layer</span><p>Blends copies of earlier frames behind the current one.</p></div><p class="res"><b>Visual result</b><br>The fox glides and leaves three fading ghost trails.</p></div>
+<div class="info i12"><div><h2>Film Grain</h2><span class="tag">Noise &amp; Grain / overlay</span><p>Adds animated noise to mimic film stock.</p></div><p class="res"><b>Visual result</b><br>A textured, analog finish with shimmering grain.</p></div>
+<div class="info i13"><div><h2>Vignette</h2><span class="tag">Lighting / overlay</span><p>Darkens the edges to pull focus toward the center.</p></div><p class="res"><b>Visual result</b><br>Corners fall into shadow and the fox and sun glow in the middle.</p></div>
+<div class="info i14"><div><h2>Black &amp; White</h2><span class="tag">Color Correction / whole artwork</span><p>Removes all color and boosts contrast.</p></div><p class="res"><b>Visual result</b><br>A moody monochrome poster with deep tonal contrast.</p></div>
+<div class="info i15"><div><h2>CRT Scanlines</h2><span class="tag">Stylize / overlay</span><p>Draws thin dark lines like a tube display.</p></div><p class="res"><b>Visual result</b><br>A retro monitor feel with crawling horizontal lines.</p></div>
+<div class="info i16"><div><h2>Particle World</h2><span class="tag">Simulation / overlay</span><p>Emits glowing particles with life and speed.</p></div><p class="res"><b>Visual result</b><br>Golden embers float up through all four layers.</p></div>
+<div class="info i17"><div><h2>Light Sweep</h2><span class="tag">Generate / overlay</span><p>Moves a bright gradient band across the surface.</p></div><p class="res"><b>Visual result</b><br>A glossy shine glides over the scene like a product reveal.</p></div>
+<div class="info i18"><div><h2>Strobe Light</h2><span class="tag">Stylize / whole artwork</span><p>Flashes the layer at set intervals.</p></div><p class="res"><b>Visual result</b><br>The scene pops with bright white flashes and dimmed beats.</p></div>
+<div class="info i19"><div><h2>3D Camera Orbit</h2><span class="tag">Camera / AR scene</span><p>Moves a virtual camera around layers set at different depths.</p></div><p class="res"><b>Visual result</b><br>The four layers separate in space and the view swings from side to side.</p></div>
+<div class="info i21"><div><h2>Fast Box Blur</h2><span class="tag">Blur &amp; Sharpen / whole artwork</span><p>Quick uniform blur using a square kernel.</p></div><p class="res"><b>Visual result</b><br>A steady soft focus over the entire scene.</p></div>
+<div class="info i22"><div><h2>Directional Blur</h2><span class="tag">Blur &amp; Sharpen / whole artwork</span><p>Smears pixels along one angle to fake motion.</p></div><p class="res"><b>Visual result</b><br>Everything streaks sideways like a fast camera pan.</p></div>
+<div class="info i23"><div><h2>Radial Blur</h2><span class="tag">Blur &amp; Sharpen / Fox layer</span><p>Blurs around a center point, as in zoom or spin.</p></div><p class="res"><b>Visual result</b><br>The fox punches toward the viewer inside a soft zoom haze.</p></div>
+<div class="info i24"><div><h2>Camera Lens Blur</h2><span class="tag">Blur &amp; Sharpen / back layers</span><p>Mimics shallow depth of field around a focal subject.</p></div><p class="res"><b>Visual result</b><br>Sky, sun and mountains melt away while the fox stays crisp.</p></div>
+<div class="info i25"><div><h2>Sharpen</h2><span class="tag">Blur &amp; Sharpen / whole artwork</span><p>Boosts contrast along edges.</p></div><p class="res"><b>Visual result</b><br>Shape edges snap out with a crisp, etched outline.</p></div>
+<div class="info i26"><div><h2>Unsharp Mask</h2><span class="tag">Blur &amp; Sharpen / whole artwork</span><p>Sharpens edges and lifts local contrast.</p></div><p class="res"><b>Visual result</b><br>A punchy, detailed look with richer color.</p></div>
+<div class="info i27"><div><h2>Brightness &amp; Contrast</h2><span class="tag">Color Correction / whole artwork</span><p>Raises light level and widens the tonal range.</p></div><p class="res"><b>Visual result</b><br>A brighter scene with deeper darks.</p></div>
+<div class="info i28"><div><h2>Exposure</h2><span class="tag">Color Correction / whole artwork</span><p>Simulates camera exposure in stops.</p></div><p class="res"><b>Visual result</b><br>The scene fades from underexposed dusk to blown-out light and back.</p></div>
+<div class="info i29"><div><h2>Curves</h2><span class="tag">Color Correction / whole artwork</span><p>Bends the tone curve with an S shape.</p></div><p class="res"><b>Visual result</b><br>Rich cinematic contrast with glowing highlights.</p></div>
+<div class="info i30"><div><h2>Tint</h2><span class="tag">Color Correction / whole artwork</span><p>Maps black and white to two chosen colors.</p></div><p class="res"><b>Visual result</b><br>The sunset turns into a cool blue monochrome.</p></div>
+<div class="info i31"><div><h2>Tritone</h2><span class="tag">Color Correction / whole artwork</span><p>Maps shadows, mids and highlights to three colors.</p></div><p class="res"><b>Visual result</b><br>A violet duotone-poster style.</p></div>
+<div class="info i32"><div><h2>Vibrance</h2><span class="tag">Color Correction / whole artwork</span><p>Pushes saturation harder on muted colors.</p></div><p class="res"><b>Visual result</b><br>Colors turn neon bright.</p></div>
+<div class="info i33"><div><h2>Photo Filter</h2><span class="tag">Color Correction / whole artwork</span><p>Overlays a lens-style color cast.</p></div><p class="res"><b>Visual result</b><br>A warm vintage amber film cast.</p></div>
+<div class="info i34"><div><h2>Colorama</h2><span class="tag">Color Correction / whole artwork</span><p>Cycles pixel values through a color gradient.</p></div><p class="res"><b>Visual result</b><br>Vivid, psychedelic palette cycling.</p></div>
+<div class="info i35"><div><h2>Bulge</h2><span class="tag">Distort / Mountains layer</span><p>Inflates a region as if viewed through a convex lens.</p></div><p class="res"><b>Visual result</b><br>The mountain range swells toward the viewer and relaxes.</p></div>
+<div class="info i36"><div><h2>Twirl</h2><span class="tag">Distort / whole artwork</span><p>Rotates pixels around a center, more at the middle.</p></div><p class="res"><b>Visual result</b><br>The scene swings in a gentle spiral and shrinks slightly.</p></div>
+<div class="info i37"><div><h2>Ripple</h2><span class="tag">Distort / whole artwork</span><p>Radiates water-like waves through the image.</p></div><p class="res"><b>Visual result</b><br>The artwork wobbles as if seen through water.</p></div>
+<div class="info i38"><div><h2>Spherize</h2><span class="tag">Distort / whole artwork</span><p>Wraps the layer around a sphere.</p></div><p class="res"><b>Visual result</b><br>The scene becomes a round, globe-like window.</p></div>
+<div class="info i39"><div><h2>Offset</h2><span class="tag">Distort / Mountains layer</span><p>Pans the layer content, wrapping around its edge.</p></div><p class="res"><b>Visual result</b><br>The mountains slide sideways against the fixed sky.</p></div>
+<div class="info i40"><div><h2>Corner Pin</h2><span class="tag">Distort / whole artwork</span><p>Pins the four corners to new positions.</p></div><p class="res"><b>Visual result</b><br>The artwork tilts like a poster turning in space.</p></div>
+<div class="info i41"><div><h2>Motion Tile</h2><span class="tag">Distort / whole artwork</span><p>Repeats the layer in a grid of tiles.</p></div><p class="res"><b>Visual result</b><br>A shrunken copy with a mirrored duplicate below it.</p></div>
+<div class="info i42"><div><h2>Polar Coordinates</h2><span class="tag">Distort / whole artwork</span><p>Converts rectangular positions to polar ones.</p></div><p class="res"><b>Visual result</b><br>The scene curls into a rotating disc.</p></div>
+<div class="info i43"><div><h2>Lens Flare</h2><span class="tag">Generate / overlay</span><p>Simulates light scattering through a camera lens.</p></div><p class="res"><b>Visual result</b><br>A bright flare with colored glints sweeps across the scene.</p></div>
+<div class="info i44"><div><h2>Beam</h2><span class="tag">Generate / overlay</span><p>Draws a glowing line between two points.</p></div><p class="res"><b>Visual result</b><br>A white light ray rotates around the center like a scanner.</p></div>
+<div class="info i45"><div><h2>Lightning</h2><span class="tag">Generate / overlay</span><p>Draws a jagged electrical arc with glow.</p></div><p class="res"><b>Visual result</b><br>A violet bolt flashes over the mountains at random beats.</p></div>
+<div class="info i46"><div><h2>4-Color Gradient</h2><span class="tag">Generate / overlay</span><p>Blends four colors from four control points.</p></div><p class="res"><b>Visual result</b><br>A shifting rainbow wash tints the artwork.</p></div>
+<div class="info i47"><div><h2>Gradient Ramp</h2><span class="tag">Generate / overlay</span><p>Creates a linear or radial color ramp.</p></div><p class="res"><b>Visual result</b><br>A violet to green ramp recolors the scene and cycles over time.</p></div>
+<div class="info i48"><div><h2>Fill</h2><span class="tag">Generate / overlay</span><p>Fills the layer with a flat color.</p></div><p class="res"><b>Visual result</b><br>A solid blue multiply fill deepens every tone.</p></div>
+<div class="info i49"><div><h2>Grid</h2><span class="tag">Generate / overlay</span><p>Draws a customizable grid of lines.</p></div><p class="res"><b>Visual result</b><br>A white blueprint grid sits over the artwork.</p></div>
+<div class="info i50"><div><h2>Radio Waves</h2><span class="tag">Generate / overlay</span><p>Emits expanding rings from a source point.</p></div><p class="res"><b>Visual result</b><br>Concentric rings pulse outward from the center.</p></div>
+<div class="info i51"><div><h2>Cell Pattern</h2><span class="tag">Generate / overlay</span><p>Builds a cellular texture of dots or blobs.</p></div><p class="res"><b>Visual result</b><br>A halftone dot texture covers the scene.</p></div>
+<div class="info i52"><div><h2>Checkerboard</h2><span class="tag">Generate / overlay</span><p>Creates alternating squares.</p></div><p class="res"><b>Visual result</b><br>A light and dark checker pattern blended into the art.</p></div>
+<div class="info i53"><div><h2>Mosaic</h2><span class="tag">Stylize / whole artwork</span><p>Splits the image into solid colored tiles.</p></div><p class="res"><b>Visual result</b><br>The scene pixelates into chunky blocks and snaps back.</p></div>
+<div class="info i54"><div><h2>Threshold</h2><span class="tag">Stylize / whole artwork</span><p>Turns every pixel pure black or white by brightness.</p></div><p class="res"><b>Visual result</b><br>The scene flips into a stark high-contrast stencil.</p></div>
+<div class="info i55"><div><h2>Find Edges</h2><span class="tag">Stylize / whole artwork</span><p>Traces outlines where color changes sharply.</p></div><p class="res"><b>Visual result</b><br>A line-drawing sketch of every shape.</p></div>
+<div class="info i56"><div><h2>Cartoon</h2><span class="tag">Stylize / whole artwork</span><p>Flattens shading and darkens contours.</p></div><p class="res"><b>Visual result</b><br>An ink-and-flat-color comic look.</p></div>
+<div class="info i57"><div><h2>Halftone</h2><span class="tag">Stylize / overlay</span><p>Builds tones from a grid of small dots.</p></div><p class="res"><b>Visual result</b><br>A fine printed dot screen covers the artwork.</p></div>
+<div class="info i58"><div><h2>Fractal Noise</h2><span class="tag">Noise &amp; Grain / overlay</span><p>Generates cloudy organic noise.</p></div><p class="res"><b>Visual result</b><br>A cloud-like texture drifts across the scene.</p></div>
+<div class="info i59"><div><h2>Dust &amp; Scratches</h2><span class="tag">Noise &amp; Grain / overlay</span><p>Adds specks like those on old film.</p></div><p class="res"><b>Visual result</b><br>Tiny white specks flicker on the image.</p></div>
+<div class="info i60"><div><h2>Roughen Edges</h2><span class="tag">Noise &amp; Grain / overlay</span><p>Gives the layer border a torn, uneven rim.</p></div><p class="res"><b>Visual result</b><br>A bright frame outlines the edge of the artwork.</p></div>
+<div class="info i61"><div><h2>Linear Wipe</h2><span class="tag">Transition / whole artwork</span><p>Reveals the layer along a straight edge.</p></div><p class="res"><b>Visual result</b><br>The artwork wipes in from the left, holds, then wipes out.</p></div>
+<div class="info i62"><div><h2>Iris Wipe</h2><span class="tag">Transition / whole artwork</span><p>Reveals the layer from a growing circle.</p></div><p class="res"><b>Visual result</b><br>The scene opens like a camera iris, then closes.</p></div>
+<div class="info i63"><div><h2>Block Dissolve</h2><span class="tag">Transition / whole artwork</span><p>Dissolves the layer through random blocks.</p></div><p class="res"><b>Visual result</b><br>The artwork builds in stepped chunks.</p></div>
+<div class="info i64"><div><h2>Card Fade</h2><span class="tag">Transition / whole artwork</span><p>Fades the layer in and out smoothly.</p></div><p class="res"><b>Visual result</b><br>The whole scene fades to the dark AR space and returns.</p></div>
+<div class="info i65"><div><h2>Venetian Blinds</h2><span class="tag">Transition / whole artwork</span><p>Reveals the layer through sliding slats.</p></div><p class="res"><b>Visual result</b><br>The artwork drops open from the top downward.</p></div>
+<div class="info i66"><div><h2>Time Displacement</h2><span class="tag">Time / Fox layer</span><p>Shifts pixels to different moments in time.</p></div><p class="res"><b>Visual result</b><br>The fox softly pulses larger and smaller, like a slow echo.</p></div>
+<div class="info i67"><div><h2>Posterize Time</h2><span class="tag">Time / Fox layer</span><p>Locks playback to a low frame rate.</p></div><p class="res"><b>Visual result</b><br>The fox eases forward in a choppy, slowed way.</p></div>
+<div class="info i68"><div><h2>Time Reverse</h2><span class="tag">Time / Fox layer</span><p>Plays the layer motion backward.</p></div><p class="res"><b>Visual result</b><br>The fox glides back and forth along its path.</p></div>
+<div class="info i69"><div><h2>Stepped Motion</h2><span class="tag">Time / Fox layer</span><p>Moves in discrete jumps instead of smoothly.</p></div><p class="res"><b>Visual result</b><br>The fox jumps forward in four ticks like a stop-motion puppet.</p></div>
+<div class="info i70"><div><h2>Motion Trail</h2><span class="tag">Time / Fox layer</span><p>Leaves a soft blur as the layer moves.</p></div><p class="res"><b>Visual result</b><br>The fox blurs and fades in the middle of its pulse.</p></div>
+<div class="info i71"><div><h2>Time Remap</h2><span class="tag">Time / Fox layer</span><p>Speeds up and slows down playback.</p></div><p class="res"><b>Visual result</b><br>The fox lunges forward, stretching, then eases back.</p></div>
+<div class="info i72"><div><h2>Bevel Alpha</h2><span class="tag">Perspective / whole artwork</span><p>Adds a raised edge with light and shadow sides.</p></div><p class="res"><b>Visual result</b><br>The artwork looks embossed, with a pulsing highlight.</p></div>
+<div class="info i73"><div><h2>Card Flip</h2><span class="tag">Perspective / whole artwork</span><p>Flips the layer around a vertical axis in 3D.</p></div><p class="res"><b>Visual result</b><br>The scene turns over like a playing card.</p></div>
+<div class="info i74"><div><h2>Swivel</h2><span class="tag">Perspective / Fox layer</span><p>Spins a layer around its axis.</p></div><p class="res"><b>Visual result</b><br>The fox rotates a full turn in the AR space.</p></div>
+<div class="info i75"><div><h2>Cast Shadow</h2><span class="tag">Perspective / Fox layer</span><p>Projects a soft shadow onto the ground.</p></div><p class="res"><b>Visual result</b><br>A long blurred shadow falls under the fox and shifts.</p></div>
+<div class="info i76"><div><h2>Chromatic Aberration</h2><span class="tag">Channel / whole artwork</span><p>Separates red and blue like a cheap lens.</p></div><p class="res"><b>Visual result</b><br>Red and blue fringes pulse around every shape.</p></div>
+<div class="info i77"><div><h2>Red Channel Only</h2><span class="tag">Channel / whole artwork</span><p>Keeps only the red values.</p></div><p class="res"><b>Visual result</b><br>The scene turns into a red-black print.</p></div>
+<div class="info i78"><div><h2>Green Channel Only</h2><span class="tag">Channel / whole artwork</span><p>Keeps only the green values.</p></div><p class="res"><b>Visual result</b><br>A night-vision green view of the artwork.</p></div>
+<div class="info i79"><div><h2>Blue Channel Only</h2><span class="tag">Channel / whole artwork</span><p>Keeps only the blue values.</p></div><p class="res"><b>Visual result</b><br>A deep blueprint-like rendering.</p></div>
+<div class="info i80"><div><h2>Solid Composite</h2><span class="tag">Channel / whole artwork</span><p>Flattens the layer into a single tonal map.</p></div><p class="res"><b>Visual result</b><br>A bold inverted monochrome x-ray look.</p></div>
+<div class="info i81"><div><h2>Channel Swap</h2><span class="tag">Channel / whole artwork</span><p>Swaps red and blue channels.</p></div><p class="res"><b>Visual result</b><br>The warm sunset flips to cool colors and the sky turns orange to blue.</p></div>
+<div class="info i82"><div><h2>Snow</h2><span class="tag">Simulation / overlay</span><p>Drops flakes with gravity and random sway.</p></div><p class="res"><b>Visual result</b><br>White flakes fall in front of all layers.</p></div>
+<div class="info i83"><div><h2>Rain</h2><span class="tag">Simulation / overlay</span><p>Streaks of falling drops at an angle.</p></div><p class="res"><b>Visual result</b><br>Slanted rain lines rush across the scene.</p></div>
+<div class="info i84"><div><h2>Bubbles</h2><span class="tag">Simulation / overlay</span><p>Rising transparent spheres.</p></div><p class="res"><b>Visual result</b><br>Glassy bubbles float up from the floor.</p></div>
+<div class="info i85"><div><h2>Wind Streaks</h2><span class="tag">Simulation / overlay</span><p>Fast horizontal lines that suggest air movement.</p></div><p class="res"><b>Visual result</b><br>White streaks sweep across, giving a strong sense of speed.</p></div>
+<div class="info i86"><div><h2>Shatter</h2><span class="tag">Simulation / Fox layer</span><p>Breaks a layer into physics-driven fragments.</p></div><p class="res"><b>Visual result</b><br>The fox shudders and tilts with a crisp, tense look.</p></div>
+<div class="info i87"><div><h2>Color Key</h2><span class="tag">Keying / whole artwork</span><p>Makes a chosen color range transparent.</p></div><p class="res"><b>Visual result</b><br>The sky drops out and the dark AR space shows through.</p></div>
+<div class="info i88"><div><h2>Keylight Sky</h2><span class="tag">Keying / Sky layer</span><p>Isolates a backdrop and shifts it independently.</p></div><p class="res"><b>Visual result</b><br>Only the sky recolors and cycles while the rest stays still.</p></div>
+<div class="info i89"><div><h2>Luma Key</h2><span class="tag">Keying / Sun layer</span><p>Keys the image by brightness values.</p></div><p class="res"><b>Visual result</b><br>The sun burns out as the scene desaturates around it.</p></div>
+<div class="info i90"><div><h2>Spill Suppressor</h2><span class="tag">Keying / Mountains layer</span><p>Removes leaked background color from edges.</p></div><p class="res"><b>Visual result</b><br>The mountains turn clean, light and neutral.</p></div>
+<div class="info i91"><div><h2>Circle Mask</h2><span class="tag">Matte / whole artwork</span><p>Reveals only a circular region.</p></div><p class="res"><b>Visual result</b><br>A circular window opens and closes over the scene.</p></div>
+<div class="info i92"><div><h2>Rounded Mask</h2><span class="tag">Matte / whole artwork</span><p>Reveals a rounded rectangle region.</p></div><p class="res"><b>Visual result</b><br>The artwork expands from a soft card to the full frame.</p></div>
+<div class="info i93"><div><h2>Triangle Mask</h2><span class="tag">Matte / whole artwork</span><p>Reveals a polygonal region.</p></div><p class="res"><b>Visual result</b><br>A triangle opens into the whole picture.</p></div>
+<div class="info i94"><div><h2>Ellipse Mask</h2><span class="tag">Matte / whole artwork</span><p>Reveals an oval region.</p></div><p class="res"><b>Visual result</b><br>A wide oval porthole grows and shrinks.</p></div>
+<div class="info i95"><div><h2>Linear Feather</h2><span class="tag">Matte / whole artwork</span><p>Softens left and right edges into transparency.</p></div><p class="res"><b>Visual result</b><br>The artwork dissolves smoothly into the AR space on both sides.</p></div>
+<div class="info i96"><div><h2>Radial Feather</h2><span class="tag">Matte / whole artwork</span><p>Softens edges from the center outward.</p></div><p class="res"><b>Visual result</b><br>The scene glows as a floating orb, corners fading away.</p></div>
+<div class="info i97"><div><h2>Fade Up Title</h2><span class="tag">Text / overlay</span><p>Text rises into place while fading in.</p></div><p class="res"><b>Visual result</b><br>The word AURORA floats up in front of all layers.</p></div>
+<div class="info i98"><div><h2>Typewriter</h2><span class="tag">Text / overlay</span><p>Reveals characters one by one.</p></div><p class="res"><b>Visual result</b><br>AR LAB types itself out with a blinking cursor.</p></div>
+<div class="info i99"><div><h2>Glitch Title</h2><span class="tag">Text / overlay</span><p>Text jitters with color split fringes.</p></div><p class="res"><b>Visual result</b><br>GLITCH tears sideways with magenta and cyan shadows.</p></div>
+<div class="info i100"><div><h2>Neon Glow Title</h2><span class="tag">Text / overlay</span><p>Text with a pulsing bright halo.</p></div><p class="res"><b>Visual result</b><br>NEON glows in violet like a sign in the dark.</p></div>
+<div class="info i101"><div><h2>Composition Guides</h2><span class="tag">Utility / overlay</span><p>Overlays center lines and thirds.</p></div><p class="res"><b>Visual result</b><br>A crosshair and rule-of-thirds grid sit on the artwork.</p></div>
+<div class="info i102"><div><h2>Title Safe</h2><span class="tag">Utility / overlay</span><p>Marks the area safe for text on screens.</p></div><p class="res"><b>Visual result</b><br>A dashed yellow safe frame appears inside the artwork.</p></div>
+<div class="info i103"><div><h2>Level Meter</h2><span class="tag">Utility / overlay</span><p>Shows animated level bars for monitoring.</p></div><p class="res"><b>Visual result</b><br>Three gradient bars swell and fall over the scene.</p></div>
+<div class="info i104"><div><h2>Cineon Print</h2><span class="tag">Utility / whole artwork</span><p>Converts to a high-contrast film print tone.</p></div><p class="res"><b>Visual result</b><br>A gritty dark monochrome print with halftone dots.</p></div>
+<div class="info i105"><div><h2>HDR Boost</h2><span class="tag">Utility / whole artwork</span><p>Expands highlight range and color intensity.</p></div><p class="res"><b>Visual result</b><br>Vivid, punchy colors with bright highlights.</p></div>
+</div></div></div></body></html>
